@@ -1,21 +1,25 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableHighlight, TouchableOpacity } from "react-native";
 import styles from "./estiloPokemons";
 
 export default function PokemonCard({ pokemonId, pokemonName, sprite }) {
     return (
-        <View style={styles.card}>
-            <Text style={styles.nome}>#{pokemonId} {pokemonName}</Text>
+        <TouchableOpacity style={styles.card}>
             <View>
-                <Image source={{uri: sprite}} style={styles.imagem}></Image>
+                <Image source={{ uri: sprite }} style={styles.imagem}></Image>
             </View>
-            <View style={styles.tipo}>
-                <View>
-                    <Text>Tipo</Text>
-                </View>
-                <View>
-                    <Text>Tipo</Text>
+
+            <View>
+                <Text style={styles.nome}>#{pokemonId} {pokemonName}</Text>
+
+                <View style={styles.tipo}>
+                    <View>
+                        <Text>Tipo</Text>
+                    </View>
+                    <View>
+                        <Text>Tipo</Text>
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
