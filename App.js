@@ -32,7 +32,7 @@ export default function App() {
       <FlatList
         data={pokemons}
         keyExtractor={item => item.id.toString()}
-        renderItem={({ item }) => <PokemonCard pokemonId={item.id} pokemonName={item.name} sprite={item.sprites.other["official-artwork"].front_default} pokemonTipo1={item.types[0].type.name} pokemonTipo2={item.types[1].type.name} />}
+        renderItem={({ item }) => <PokemonCard pokemonId={item.id} pokemonName={item.name} sprite={item.sprites.other["official-artwork"].front_default} pokemonTipo1={item.types[0].type.name} pokemonTipo2={item.types[1] ? item.types[1].type.name : null}/>}
 
       />
     </SafeAreaView>
