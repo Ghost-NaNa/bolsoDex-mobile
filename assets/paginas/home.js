@@ -58,7 +58,7 @@ export function Home() {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, alignItems: 'center', backgroundColor: '#e5e5e5' }}>
+        <SafeAreaView style={{ flex: 1, alignItems: 'center', backgroundColor: '#93c2ffff' }}>
             <Cabecalho />
             <Pesquisa />
 

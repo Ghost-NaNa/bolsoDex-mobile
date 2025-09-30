@@ -28,7 +28,7 @@ export default function PokemonCard({ pokemonId, pokemonName, sprite, pokemonTip
     )
 }
 
-function verificarTipo(tipo) {
+export function verificarTipo(tipo) {
     switch (tipo) {
         case 'dark':
             return typeStyles.dark;

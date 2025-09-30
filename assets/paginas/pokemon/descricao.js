@@ -1,50 +1,94 @@
-
-import { FlatList, SafeAreaView, ActivityIndicator, View, Text, Image } from 'react-native';
+import { SafeAreaView, ActivityIndicator, View, Text, Image, estiloDescricaoheet } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
+
+import estiloDescricao from './estiloDescricao.js';
+import { verificarTipo } from '../../componentes/cardsPokemons/pokemon.js';
 
 export function Descricao() {
 
     const route = useRoute();
     const [pokemon, setPokemon] = useState({});
-    const [descricao, setDescricao] = useState('');
+    const [descricao, setDescricao] =useState('');
+    // Lógica aprimorada para buscar tipos e controlar o carregamento
+    const [tipos, setTipos] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const API_URL = `https://pokeapi.co/api/v2/pokemon/${route.params.pokemonId}/`
 
     useEffect(() => {
-        async function buscarPokemon() {
-            const response = await fetch(API_URL)
-            const data = await response.json()
-            setPokemon(data)
+        // A lógica de busca foi mantida e aprimorada para buscar tudo de uma vez
+        async function buscarDadosCompletos() {
+            try {
+                const pokemonResponse = await fetch(API_URL);
+                const pokemonData = await pokemonResponse.json();
+                setPokemon(pokemonData);
+                setTipos(pokemonData.types);
+
+                const speciesResponse = await fetch(pokemonData.species.url);
+                const speciesData = await speciesResponse.json();
+                const entry = speciesData.flavor_text_entries.find(
+                    (entry) => entry.language.name === 'en'
+                );
+                
+                setDescricao(entry ? entry.flavor_text.replace(/[\f\n\r]/g, ' ') : 'Descrição não encontrada');
+
+            } catch (error) {
+                console.error("Erro ao buscar dados:", error);
+            } finally {
+                setLoading(false);
+            }
         }
-        async function buscarDescricao() {
-            const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${route.params.pokemonId}/`)
-            const data = await response.json();
-            const entry = data.flavor_text_entries.find(
-                (entry) => entry.language.name === 'en'
-            );
-            setDescricao(entry ? entry.flavor_text.replace(/\f|\n|\r/g, ' ') : 'Descrição não encontrada')
-        }
-        buscarPokemon();
-        buscarDescricao();
+        
+        buscarDadosCompletos();
     }, []);
+
+    if (loading) {
+        return (
+            <View style={estiloDescricao.loadingContainer}>
+                <ActivityIndicator size="large" color="#c7283b" />
+                <Text>Analisando Pokémon...</Text>
+            </View>
+        );
+    }
+    
     return (
-        <SafeAreaView>
-            <View>
+        // SUA ESTRUTURA ORIGINAL COMEÇA AQUI
+        <SafeAreaView style={estiloDescricao.container}>
+            <View style={estiloDescricao.imageSection}>
                 {pokemon.sprites ? (
-                    <Image source={{uri: pokemon.sprites.other["official-artwork"].front_default}} />
+                    <Image 
+                        style={estiloDescricao.pokemonImage} 
+                        source={{uri: pokemon.sprites.other["official-artwork"].front_default}} 
+                    />
                 ) : (
-                    <ActivityIndicator size="large" color="#0000ff" />
+                    <View style={estiloDescricao.imagePlaceholder}>
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    </View>
                 )}
-                <View>
-                    <Text>{route.params.pokemonId}</Text>
-                    <Text>{pokemon.name}</Text>
+                <View style={estiloDescricao.nameIdContainer}>
+                    <Text style={estiloDescricao.idText}>Nº {String(route.params.pokemonId).padStart(3, '0')}</Text>
+                    <Text style={estiloDescricao.nameText}>{pokemon.name?.charAt(0).toUpperCase() + pokemon.name?.slice(1)}</Text>
                 </View>
             </View>
-            <View>
-                <Text>Altura: {pokemon.height/10} Metro(s)</Text>
-                <Text>Peso: {pokemon.weight/100} KG</Text>
-                <Text>Descrição: {descricao}</Text>
+            
+            <View style={estiloDescricao.dataSection}>
+                {/* Tipos foram adicionados aqui para completar as informações */}
+                <View style={estiloDescricao.typesContainer}>
+                    {tipos.map((typeInfo, index) => (
+                        <View key={index} style={verificarTipo(typeInfo.type.name)}>
+                            <Text style={estiloDescricao.typeText}>{typeInfo.type.name.toUpperCase()}</Text>
+                        </View>
+                    ))}
+                </View>
+                
+                <View style={estiloDescricao.statsGrid}>
+                    <Text style={estiloDescricao.dataText}>Altura: {pokemon.height/10} m</Text>
+                    <Text style={estiloDescricao.dataText}>Peso: {pokemon.weight/10} kg</Text>
+                </View>
+                
+                <Text style={estiloDescricao.descriptionLabel}>Descrição:</Text>
+                <Text style={estiloDescricao.descriptionText}>{descricao}</Text>
             </View>
         </SafeAreaView>
     );
