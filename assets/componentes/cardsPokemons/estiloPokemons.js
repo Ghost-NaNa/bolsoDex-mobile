@@ -41,6 +41,8 @@ const styles = StyleSheet.create({
 });
 
 const typeStyles = StyleSheet.create({
+	dark: { backgroundColor: '#302f2eff', color: '#fff', width: 70, textAlign: 'center', borderRadius: 6, padding: 2, textTransform: 'capitalize'  },
+	ghost: { backgroundColor: '#705898ff', color: '#fff', width: 70, textAlign: 'center', borderRadius: 6, padding: 2, textTransform: 'capitalize'  },
 	fire: { backgroundColor: '#F08030', color: '#fff', width: 70, textAlign: 'center', borderRadius: 6, padding: 2, textTransform: 'capitalize'  },
 	water: { backgroundColor: '#6890F0', color: '#fff', width: 70, textAlign: 'center', borderRadius: 6, padding: 2, textTransform: 'capitalize'  },
 	grass: { backgroundColor: '#78C870', color: '#fff', width: 70, textAlign: 'center', borderRadius: 6, padding: 2, textTransform: 'capitalize'  },

@@ -1,9 +1,13 @@
 import { View, Text, Image, TouchableHighlight, TouchableOpacity } from "react-native";
 import { styles, typeStyles } from "./estiloPokemons.js";
+import { useNavigation } from "@react-navigation/native";
 
 export default function PokemonCard({ pokemonId, pokemonName, sprite, pokemonTipo1, pokemonTipo2 }) {
+
+    const navigation = useNavigation();
+
     return (
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Descrição', { pokemonId })}>
             <View>
                 <Image source={{ uri: sprite }} style={styles.imagem}></Image>
             </View>
@@ -26,6 +30,10 @@ export default function PokemonCard({ pokemonId, pokemonName, sprite, pokemonTip
 
 function verificarTipo(tipo) {
     switch (tipo) {
+        case 'dark':
+            return typeStyles.dark;
+        case 'ghost':
+            return typeStyles.ghost;
         case 'fire':
             return typeStyles.fire;
         case 'water':
